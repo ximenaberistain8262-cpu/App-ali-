@@ -36,14 +36,6 @@ interface ApprovalRow {
   estado: ApprovalStatus;
 }
 
-interface ValidationMilestone {
-  id: string;
-  prueba: string;
-  responsable: string;
-  fechaLimite: string;
-  criterio: string;
-}
-
 interface EngineeringChangeFormState {
   noSolicitud: string;
   fecha: string;
@@ -70,11 +62,9 @@ interface EngineeringChangeFormState {
   validacionesTecnicas: Record<TechnicalCheckKey, boolean>;
   planMitigacion: string;
   aprobaciones: ApprovalRow[];
-  hitosValidacion: ValidationMilestone[];
-  notasComite: string;
 }
 
-const STORAGE_KEY = 'dior_parfums_ecr_complex_v2';
+const STORAGE_KEY = 'dior_parfums_ecr_agile_v3';
 
 const createInitialState = (): EngineeringChangeFormState => ({
   noSolicitud: '',
@@ -126,11 +116,6 @@ const createInitialState = (): EngineeringChangeFormState => ({
     { rol: 'Asuntos Regulatorios', nombre: '', firma: '', fecha: '', observaciones: '', estado: null },
     { rol: 'Dirección Packaging', nombre: '', firma: '', fecha: '', observaciones: '', estado: null },
   ],
-  hitosValidacion: [
-    { id: 'm-1', prueba: '', responsable: '', fechaLimite: '', criterio: '' },
-    { id: 'm-2', prueba: '', responsable: '', fechaLimite: '', criterio: '' },
-  ],
-  notasComite: '',
 });
 
 const COLLECTIONS = [
@@ -145,47 +130,97 @@ const COLLECTIONS = [
 ];
 
 const PLANT_SITES = [
-  'Saint-Jean-de-Braye — Envasado Parfums',
-  'Chartres — Producción Cosméticos',
-  'París — Laboratorio de Formulación',
-  'Proveedor Vidriería / Crimpado Externo',
+  'Saint-Jean-de-Braye — Parfums',
+  'Chartres — Cosméticos',
+  'París — Lab Formulación',
+  'Proveedor Externo',
 ];
 
 const ROOT_CAUSES = [
-  'Desviación de tolerancia en proveedor',
+  'Desviación en proveedor',
   'Optimización de peso / ecodiseño',
-  'Actualización normativa (IFRA / UE 1223/2009)',
-  'Incidencia en línea de llenado o crimpado',
-  'Mejora de estabilidad o experiencia sensorial',
-  'Sustitución de materia prima / pigmento',
+  'Actualización normativa (IFRA / UE)',
+  'Incidencia en línea de llenado',
+  'Mejora de estabilidad / sensorial',
+  'Sustitución de materia prima',
 ];
 
 const AFFECTED_AREAS = [
-  'Alta Perfumería — Formulación y Maceración',
-  'Maquillaje — Pigmentos y Texturas',
-  'Tratamiento Facial — Skincare',
-  'Packaging Primario (Frascos y Válvulas)',
-  'Packaging Secundario y Estuchería',
-  'Envasado, Llenado y Acondicionamiento',
-  'Control de Calidad y Estabilidad',
+  'Alta Perfumería',
+  'Maquillaje',
+  'Tratamiento Facial (Skincare)',
+  'Packaging Primario',
+  'Packaging Secundario',
+  'Envasado y Llenado',
+  'Calidad y Estabilidad',
   'Dirección Financiera',
 ];
 
 const INVENTORY_STRATEGIES = [
-  'Agotar inventario existente antes de transición',
-  'Reacondicionar / retrabajar lote en planta',
-  'Cuarentena inmediata y disposición controlada',
-  'Implementación paralela (doble fuente)',
-  'No aplica — Nuevo lanzamiento',
+  'Agotar stock actual',
+  'Reacondicionar lote',
+  'Cuarentena inmediata',
+  'Transición paralela',
+  'No aplica',
+];
+
+const HEADER_AREAS = [
+  'Alta Perfumería',
+  'Maquillaje',
+  'Tratamiento Facial',
+  'Packaging y Envases',
+  'Control de Calidad',
+  'Envasado y Producción',
+  'Asuntos Regulatorios',
+];
+
+const PART_SUGGESTIONS = [
+  "Frasco J'adore 100 ml",
+  'Válvula atomizadora crimpada',
+  'Estuche Rouge Dior',
+  'Tapa magnética lacada',
+  'Gotero vidrio Prestige',
+  'Bomba airless Capture Totale',
+];
+
+const PROBLEM_SUGGESTIONS = [
+  'Microfuga en válvula al 2.º disparo',
+  'Desviación de tono en laca o vidrio',
+  'Torque insuficiente en cierre',
+  'Inestabilidad de fase a 45 °C',
+  'Actualización de texto INCI / lote',
+];
+
+const PROPOSAL_SUGGESTIONS = [
+  'Empaque de silicona grado cosmético',
+  'Ajuste de tolerancia en cuello ±0.15 mm',
+  'Sustitución de pigmento aprobado UE',
+  'Actualización de arte gráfico e INCI',
+  'Refuerzo de crimpado en línea',
+];
+
+const COST_CONCEPT_SUGGESTIONS = [
+  'Vidrio flint reciclado',
+  'Bomba spray / válvula',
+  'Pigmento mineral / activo',
+  'Estuche cartón certificado',
+  'Baño metálico / lacado',
+];
+
+const MITIGATION_SUGGESTIONS = [
+  'Prueba de vacío en 50 muestras antes del llenado',
+  'Estabilidad acelerada 45 °C por 4 semanas',
+  'Validación sensorial con panel experto',
+  'Inspección 100 % en recepción de lote',
 ];
 
 const TECHNICAL_CHECKS: { key: TechnicalCheckKey; label: string }[] = [
-  { key: 'compatibilidad', label: 'Compatibilidad envase–fórmula (45 °C / 3 meses)' },
-  { key: 'hermeticidad', label: 'Prueba de hermeticidad al vacío (sin fugas)' },
-  { key: 'ifraUe', label: 'Cumplimiento normativo IFRA / Reglamento Cosmético UE' },
-  { key: 'sensorial', label: 'Evaluación sensorial y olfativa de panel experto' },
-  { key: 'artesInci', label: 'Actualización de artes gráficas, códigos e INCI' },
-  { key: 'lineaLlenado', label: 'Recalificación de línea de llenado y torque' },
+  { key: 'compatibilidad', label: 'Compatibilidad envase–fórmula' },
+  { key: 'hermeticidad', label: 'Hermeticidad al vacío' },
+  { key: 'ifraUe', label: 'Cumplimiento IFRA / UE' },
+  { key: 'sensorial', label: 'Validación sensorial / olfativa' },
+  { key: 'artesInci', label: 'Artes gráficas e INCI' },
+  { key: 'lineaLlenado', label: 'Recalificación de llenado' },
 ];
 
 function parseNumericCost(value: string): number {
@@ -207,12 +242,7 @@ export default function App() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as EngineeringChangeFormState;
-        if (
-          parsed &&
-          Array.isArray(parsed.costos) &&
-          Array.isArray(parsed.aprobaciones) &&
-          Array.isArray(parsed.hitosValidacion)
-        ) {
+        if (parsed && Array.isArray(parsed.costos) && Array.isArray(parsed.aprobaciones)) {
           return parsed;
         }
       }
@@ -227,7 +257,6 @@ export default function App() {
     costos: true,
     riesgo: true,
     aprobaciones: true,
-    validacion: true,
   });
 
   const [feedback, setFeedback] = useState<{
@@ -253,7 +282,6 @@ export default function App() {
       costos: next,
       riesgo: next,
       aprobaciones: next,
-      validacion: next,
     });
   };
 
@@ -313,45 +341,6 @@ export default function App() {
       return {
         ...prev,
         costos: prev.costos.filter((row) => row.id !== id),
-      };
-    });
-  };
-
-  const handleMilestoneChange = (
-    id: string,
-    field: 'prueba' | 'responsable' | 'fechaLimite' | 'criterio',
-    value: string
-  ) => {
-    setForm((prev) => ({
-      ...prev,
-      hitosValidacion: prev.hitosValidacion.map((m) =>
-        m.id === id ? { ...m, [field]: value } : m
-      ),
-    }));
-  };
-
-  const handleAddMilestone = () => {
-    setForm((prev) => ({
-      ...prev,
-      hitosValidacion: [
-        ...prev.hitosValidacion,
-        {
-          id: `m-${Date.now()}`,
-          prueba: '',
-          responsable: '',
-          fechaLimite: '',
-          criterio: '',
-        },
-      ],
-    }));
-  };
-
-  const handleRemoveMilestone = (id: string) => {
-    setForm((prev) => {
-      if (prev.hitosValidacion.length <= 1) return prev;
-      return {
-        ...prev,
-        hitosValidacion: prev.hitosValidacion.filter((m) => m.id !== id),
       };
     });
   };
@@ -496,22 +485,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#EFECE6] py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#EFECE6] py-8 px-4 sm:px-6 lg:px-8">
       <main className="mx-auto max-w-5xl bg-white border border-[#D8D4CC] rounded-none overflow-hidden">
         {/* Cabecera Couture Noir Dior */}
-        <div className="bg-[#111111] px-6 sm:px-12 py-6 text-center border-b border-[#2A2A2A]">
+        <div className="bg-[#111111] px-6 sm:px-12 py-5 text-center border-b border-[#2A2A2A]">
           <div className="font-serif text-3xl sm:text-4xl font-semibold tracking-[0.42em] text-[#FAF9F6] pl-[0.42em]">
             DIOR
           </div>
-          <p className="mt-2 text-[11px] tracking-[0.26em] text-[#9E9B95] font-sans">
+          <p className="mt-1.5 text-[11px] tracking-[0.26em] text-[#9E9B95] font-sans">
             Parfums &amp; Beauté · Ingeniería de Formulación, Packaging y Regulación
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate className="p-6 sm:p-12 space-y-9">
+        <form onSubmit={handleSubmit} noValidate className="p-6 sm:p-10 space-y-7">
           {/* Título del documento y metadatos */}
-          <header className="space-y-7">
-            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 border-b border-[#141414] pb-4">
+          <header className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-3 border-b border-[#141414] pb-3.5">
               <h1 className="font-serif text-2xl sm:text-3xl font-semibold tracking-tight text-[#141414]">
                 Solicitud de Cambio de Ingeniería
               </h1>
@@ -536,9 +525,9 @@ export default function App() {
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               {/* Fila 1: No. Solicitud, Fecha y Prioridad */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-5 items-end">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-4 items-end">
                 <div className="lg:col-span-4 flex items-baseline gap-3">
                   <label
                     htmlFor="no-solicitud"
@@ -549,6 +538,7 @@ export default function App() {
                   <input
                     id="no-solicitud"
                     type="text"
+                    maxLength={24}
                     value={form.noSolicitud}
                     onChange={(e) => {
                       setForm((prev) => ({ ...prev, noSolicitud: e.target.value }));
@@ -556,8 +546,8 @@ export default function App() {
                         setValidationErrors((prev) => ({ ...prev, noSolicitud: false }));
                       }
                     }}
-                    placeholder="PCD-ECR-2026-001"
-                    className={`w-full bg-transparent border-b py-1.5 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
+                    placeholder="PCD-2026-001"
+                    className={`w-full bg-transparent border-b py-1 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
                       validationErrors.noSolicitud
                         ? 'border-[#141414] bg-[#F7F5F0]'
                         : 'border-[#CFCAC0] focus:border-[#141414]'
@@ -582,7 +572,7 @@ export default function App() {
                         setValidationErrors((prev) => ({ ...prev, fecha: false }));
                       }
                     }}
-                    className={`w-full bg-transparent border-b py-1.5 px-1 text-sm font-mono text-[#141414] focus:outline-none transition-colors ${
+                    className={`w-full bg-transparent border-b py-1 px-1 text-sm font-mono text-[#141414] focus:outline-none transition-colors ${
                       validationErrors.fecha
                         ? 'border-[#141414] bg-[#F7F5F0]'
                         : 'border-[#CFCAC0] focus:border-[#141414]'
@@ -629,7 +619,7 @@ export default function App() {
               </div>
 
               {/* Fila 2: Solicitante y Área */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-5 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-4 items-end">
                 <div className="sm:col-span-7 flex items-baseline gap-3">
                   <label
                     htmlFor="solicitante"
@@ -640,6 +630,7 @@ export default function App() {
                   <input
                     id="solicitante"
                     type="text"
+                    maxLength={60}
                     value={form.solicitante}
                     onChange={(e) => {
                       setForm((prev) => ({ ...prev, solicitante: e.target.value }));
@@ -647,8 +638,8 @@ export default function App() {
                         setValidationErrors((prev) => ({ ...prev, solicitante: false }));
                       }
                     }}
-                    placeholder="Nombre del ingeniero / formulador"
-                    className={`w-full bg-transparent border-b py-1.5 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
+                    placeholder="Nombre y apellido"
+                    className={`w-full bg-transparent border-b py-1 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
                       validationErrors.solicitante
                         ? 'border-[#141414] bg-[#F7F5F0]'
                         : 'border-[#CFCAC0] focus:border-[#141414]'
@@ -663,19 +654,30 @@ export default function App() {
                   >
                     Área
                   </label>
-                  <input
-                    id="area"
-                    type="text"
-                    value={form.area}
-                    onChange={(e) => setForm((prev) => ({ ...prev, area: e.target.value }))}
-                    placeholder="Perfumería / Maquillaje / Skincare"
-                    className="w-full bg-transparent border-b border-[#CFCAC0] py-1.5 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
-                  />
+                  <div className="relative w-full">
+                    <select
+                      id="area"
+                      value={form.area}
+                      onChange={(e) => setForm((prev) => ({ ...prev, area: e.target.value }))}
+                      className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                    >
+                      <option value="">Seleccionar área</option>
+                      {HEADER_AREAS.map((area) => (
+                        <option key={area} value={area}>
+                          {area}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#706D66]"
+                      aria-hidden="true"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Fila 3: Línea / Colección y Planta / Sitio */}
-              <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-5 items-end">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-4 items-end">
                 <div className="sm:col-span-6 flex items-baseline gap-3">
                   <label
                     htmlFor="coleccion"
@@ -690,9 +692,9 @@ export default function App() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, coleccion: e.target.value }))
                       }
-                      className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1.5 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                      className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
                     >
-                      <option value="">Seleccionar línea de producto</option>
+                      <option value="">Seleccionar línea</option>
                       {COLLECTIONS.map((item) => (
                         <option key={item} value={item}>
                           {item}
@@ -720,9 +722,9 @@ export default function App() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, sitioPlanta: e.target.value }))
                       }
-                      className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1.5 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                      className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
                     >
-                      <option value="">Seleccionar instalación</option>
+                      <option value="">Seleccionar sede</option>
                       {PLANT_SITES.map((site) => (
                         <option key={site} value={site}>
                           {site}
@@ -738,7 +740,7 @@ export default function App() {
               </div>
 
               {/* Fila 4: Tipo de cambio */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-1">
                 <span className="text-xs font-medium tracking-wide text-[#5C5953] whitespace-nowrap shrink-0">
                   Tipo de cambio
                 </span>
@@ -775,7 +777,7 @@ export default function App() {
               type="button"
               onClick={() => toggleSection('problema')}
               aria-expanded={openSections.problema}
-              className="w-full flex items-center gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-3 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
+              className="w-full flex items-center gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-2.5 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
             >
               <ChevronDown
                 className={`w-4 h-4 text-[#141414] shrink-0 transition-transform duration-150 ${
@@ -789,8 +791,8 @@ export default function App() {
             </button>
 
             {openSections.problema && (
-              <div className="p-5 sm:p-7 space-y-6 bg-white">
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-5 items-end">
+              <div className="p-5 sm:p-6 space-y-5 bg-white">
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-4 items-end">
                   <div className="sm:col-span-7 flex items-baseline gap-3">
                     <label
                       htmlFor="pieza-afectada"
@@ -801,6 +803,8 @@ export default function App() {
                     <input
                       id="pieza-afectada"
                       type="text"
+                      list="part-suggestions"
+                      maxLength={60}
                       value={form.piezaAfectada}
                       onChange={(e) => {
                         setForm((prev) => ({ ...prev, piezaAfectada: e.target.value }));
@@ -808,8 +812,8 @@ export default function App() {
                           setValidationErrors((prev) => ({ ...prev, piezaAfectada: false }));
                         }
                       }}
-                      placeholder="Frasco J'adore / Envase Rouge Dior / Válvula"
-                      className={`w-full bg-transparent border-b py-1.5 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
+                      placeholder="Frasco / Válvula / Estuche"
+                      className={`w-full bg-transparent border-b py-1 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none transition-colors ${
                         validationErrors.piezaAfectada
                           ? 'border-[#141414] bg-[#F7F5F0]'
                           : 'border-[#CFCAC0] focus:border-[#141414]'
@@ -827,15 +831,16 @@ export default function App() {
                     <input
                       id="codigo-pieza"
                       type="text"
+                      maxLength={24}
                       value={form.codigo}
                       onChange={(e) => setForm((prev) => ({ ...prev, codigo: e.target.value }))}
-                      placeholder="PCD-FR-3348-A"
-                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1.5 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
+                      placeholder="PCD-3348-A"
+                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-5 items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-12 gap-x-8 gap-y-4 items-end">
                   <div className="sm:col-span-4 flex items-baseline gap-3">
                     <label
                       htmlFor="lote-referencia"
@@ -846,12 +851,13 @@ export default function App() {
                     <input
                       id="lote-referencia"
                       type="text"
+                      maxLength={20}
                       value={form.loteReferencia}
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, loteReferencia: e.target.value }))
                       }
                       placeholder="LOT-4F09"
-                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1.5 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -865,12 +871,13 @@ export default function App() {
                     <input
                       id="revision-cambio"
                       type="text"
+                      maxLength={12}
                       value={form.revisionCambio}
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, revisionCambio: e.target.value }))
                       }
-                      placeholder="Rev. A → B"
-                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1.5 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
+                      placeholder="A → B"
+                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
 
@@ -888,7 +895,7 @@ export default function App() {
                         onChange={(e) =>
                           setForm((prev) => ({ ...prev, causaRaiz: e.target.value }))
                         }
-                        className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1.5 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                        className="w-full appearance-none bg-transparent border-b border-[#CFCAC0] py-1 pl-1 pr-7 text-sm text-[#141414] focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
                       >
                         <option value="">Seleccionar causa</option>
                         {ROOT_CAUSES.map((cause) => (
@@ -905,42 +912,47 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
+                {/* Campos breves de ingreso rápido */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                  <div className="space-y-1.5">
                     <label
                       htmlFor="descripcion-problema"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
                     >
-                      Descripción del problema
+                      Descripción breve del problema
                     </label>
-                    <textarea
+                    <input
                       id="descripcion-problema"
-                      rows={3}
+                      type="text"
+                      list="problem-suggestions"
+                      maxLength={140}
                       value={form.descripcionProblema}
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, descripcionProblema: e.target.value }))
                       }
-                      placeholder="Detalle la desviación en envase, dosificación, estabilidad de fórmula cosmética, acabado o sellado..."
-                      className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3.5 py-2.5 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none resize-y transition-colors"
+                      placeholder="Ej. Microfuga en válvula al 2.º disparo"
+                      className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3 py-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <label
                       htmlFor="justificacion-tecnica"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
                     >
-                      Propuesta técnica y justificación
+                      Cambio propuesto (resumen)
                     </label>
-                    <textarea
+                    <input
                       id="justificacion-tecnica"
-                      rows={3}
+                      type="text"
+                      list="proposal-suggestions"
+                      maxLength={140}
                       value={form.justificacionTecnica}
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, justificacionTecnica: e.target.value }))
                       }
-                      placeholder="Especifique la modificación propuesta en tolerancias, material o composición y el beneficio técnico..."
-                      className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3.5 py-2.5 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none resize-y transition-colors"
+                      placeholder="Ej. Empaque de silicona grado cosmético"
+                      className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3 py-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
@@ -954,7 +966,7 @@ export default function App() {
               type="button"
               onClick={() => toggleSection('costos')}
               aria-expanded={openSections.costos}
-              className="w-full flex items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-3 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
+              className="w-full flex items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-2.5 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
             >
               <div className="flex items-center gap-3">
                 <ChevronDown
@@ -973,27 +985,27 @@ export default function App() {
             </button>
 
             {openSections.costos && (
-              <div className="p-5 sm:p-7 bg-white space-y-6">
+              <div className="p-5 sm:p-6 bg-white space-y-5">
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse text-sm min-w-[640px]">
                     <thead>
                       <tr className="bg-[#FAF9F6] border-y border-[#D8D4CC] text-[#5C5953]">
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[36%]">
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[36%]">
                           Concepto
                         </th>
-                        <th className="py-2.5 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
+                        <th className="py-2 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
                           Costo Actual
                         </th>
-                        <th className="py-2.5 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
+                        <th className="py-2 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
                           Costo Nuevo
                         </th>
-                        <th className="py-2.5 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
+                        <th className="py-2 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[16%]">
                           Diferencia
                         </th>
-                        <th className="py-2.5 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[12%]">
+                        <th className="py-2 px-3 text-right text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[12%]">
                           Var. %
                         </th>
-                        <th className="py-2.5 px-2 w-[4%]" aria-label="Acciones" />
+                        <th className="py-2 px-2 w-[4%]" aria-label="Acciones" />
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#EAE7E0]">
@@ -1007,19 +1019,21 @@ export default function App() {
 
                         return (
                           <tr key={row.id} className="hover:bg-[#FAF9F6] transition-colors">
-                            <td className="py-2 pr-3">
+                            <td className="py-1.5 pr-3">
                               <input
                                 type="text"
+                                list="cost-concept-suggestions"
+                                maxLength={50}
                                 aria-label={`Concepto fila ${idx + 1}`}
                                 value={row.concepto}
                                 onChange={(e) =>
                                   handleCostChange(row.id, 'concepto', e.target.value)
                                 }
-                                placeholder={`Partida ${idx + 1} (ej. Vidrio flint, bomba spray, pigmento)`}
-                                className="w-full bg-transparent py-1.5 px-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
+                                placeholder={`Ej. Bomba spray / Vidrio ${idx + 1}`}
+                                className="w-full bg-transparent py-1 px-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
                               />
                             </td>
-                            <td className="py-2 px-3 border-l border-[#EAE7E0]">
+                            <td className="py-1.5 px-3 border-l border-[#EAE7E0]">
                               <div className="flex items-center justify-end gap-1">
                                 <span className="text-xs text-[#9E9B95] font-mono">$</span>
                                 <input
@@ -1031,11 +1045,11 @@ export default function App() {
                                     handleCostChange(row.id, 'costoActual', e.target.value)
                                   }
                                   placeholder="0.00"
-                                  className="w-full text-right bg-transparent py-1.5 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
+                                  className="w-full text-right bg-transparent py-1 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
                                 />
                               </div>
                             </td>
-                            <td className="py-2 px-3 border-l border-[#EAE7E0]">
+                            <td className="py-1.5 px-3 border-l border-[#EAE7E0]">
                               <div className="flex items-center justify-end gap-1">
                                 <span className="text-xs text-[#9E9B95] font-mono">$</span>
                                 <input
@@ -1047,11 +1061,11 @@ export default function App() {
                                     handleCostChange(row.id, 'costoNuevo', e.target.value)
                                   }
                                   placeholder="0.00"
-                                  className="w-full text-right bg-transparent py-1.5 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
+                                  className="w-full text-right bg-transparent py-1 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
                                 />
                               </div>
                             </td>
-                            <td className="py-2 px-3 border-l border-[#EAE7E0] text-right font-mono tabular-nums text-sm">
+                            <td className="py-1.5 px-3 border-l border-[#EAE7E0] text-right font-mono tabular-nums text-sm">
                               {hasValues ? (
                                 <span
                                   className={
@@ -1066,7 +1080,7 @@ export default function App() {
                                 <span className="text-[#CFCAC0]">—</span>
                               )}
                             </td>
-                            <td className="py-2 px-3 border-l border-[#EAE7E0] text-right font-mono tabular-nums text-xs text-[#5C5953]">
+                            <td className="py-1.5 px-3 border-l border-[#EAE7E0] text-right font-mono tabular-nums text-xs text-[#5C5953]">
                               {hasValues && pct !== null ? (
                                 <span>
                                   {pct > 0 ? '+' : ''}
@@ -1076,7 +1090,7 @@ export default function App() {
                                 <span className="text-[#CFCAC0]">—</span>
                               )}
                             </td>
-                            <td className="py-2 pl-1 text-right">
+                            <td className="py-1.5 pl-1 text-right">
                               {form.costos.length > 1 && (
                                 <button
                                   type="button"
@@ -1095,7 +1109,7 @@ export default function App() {
                   </table>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
+                <div className="flex flex-wrap items-center justify-between gap-4">
                   <button
                     type="button"
                     onClick={handleAddCostRow}
@@ -1108,12 +1122,12 @@ export default function App() {
 
                 {/* Parámetros de proyección financiera */}
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 pt-4 border-t border-[#EAE7E0] items-end">
-                  <div className="sm:col-span-4 space-y-1.5">
+                  <div className="sm:col-span-4 space-y-1">
                     <label
                       htmlFor="volumen-anual"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
                     >
-                      Volumen anual estimado (uds.)
+                      Volumen anual (uds.)
                     </label>
                     <input
                       id="volumen-anual"
@@ -1125,16 +1139,16 @@ export default function App() {
                         setForm((prev) => ({ ...prev, volumenAnual: e.target.value }))
                       }
                       placeholder="150000"
-                      className="w-full border-b border-[#CFCAC0] bg-transparent py-1.5 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
+                      className="w-full border-b border-[#CFCAC0] bg-transparent py-1 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
 
-                  <div className="sm:col-span-4 space-y-1.5">
+                  <div className="sm:col-span-4 space-y-1">
                     <label
                       htmlFor="costo-herramental"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
                     >
-                      Inversión moldes / herramental (CapEx)
+                      Moldes / CapEx
                     </label>
                     <div className="flex items-center gap-1 border-b border-[#CFCAC0] focus-within:border-[#141414] transition-colors">
                       <span className="text-xs text-[#9E9B95] font-mono">$</span>
@@ -1147,12 +1161,12 @@ export default function App() {
                           setForm((prev) => ({ ...prev, costoHerramental: e.target.value }))
                         }
                         placeholder="0.00"
-                        className="w-full bg-transparent py-1.5 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
+                        className="w-full bg-transparent py-1 px-1 text-sm font-mono tabular-nums text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
                       />
                     </div>
                   </div>
 
-                  <div className="sm:col-span-4 bg-[#FAF9F6] border border-[#D8D4CC] px-4 py-2.5 flex items-baseline justify-between gap-3">
+                  <div className="sm:col-span-4 bg-[#FAF9F6] border border-[#D8D4CC] px-4 py-2 flex items-baseline justify-between gap-3">
                     <span className="text-xs font-medium tracking-wide text-[#5C5953] whitespace-nowrap">
                       Total Estimado Anual
                     </span>
@@ -1165,13 +1179,13 @@ export default function App() {
             )}
           </section>
 
-          {/* Sección 3: Análisis de riesgo, compatibilidad y regulación */}
+          {/* Sección 3: Análisis de riesgo y cumplimiento */}
           <section className="border border-[#D8D4CC] rounded-none overflow-hidden">
             <button
               type="button"
               onClick={() => toggleSection('riesgo')}
               aria-expanded={openSections.riesgo}
-              className="w-full flex items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-3 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
+              className="w-full flex items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-2.5 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
             >
               <div className="flex items-center gap-3">
                 <ChevronDown
@@ -1190,11 +1204,11 @@ export default function App() {
             </button>
 
             {openSections.riesgo && (
-              <div className="p-5 sm:p-7 bg-white space-y-6">
+              <div className="p-5 sm:p-6 bg-white space-y-5">
                 {/* Nivel de riesgo y fecha objetivo */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
                   <div className="lg:col-span-7 flex flex-wrap items-center gap-x-7 gap-y-2">
-                    <span className="text-xs font-medium tracking-wide text-[#5C5953] whitespace-nowrap shrink-0 min-w-32">
+                    <span className="text-xs font-medium tracking-wide text-[#5C5953] whitespace-nowrap shrink-0 min-w-28">
                       Nivel de riesgo
                     </span>
 
@@ -1212,7 +1226,7 @@ export default function App() {
                       ).map((option) => (
                         <label
                           key={option.value}
-                          className="inline-flex items-center gap-2.5 text-sm text-[#1F1F1F] cursor-pointer select-none min-h-9"
+                          className="inline-flex items-center gap-2 text-sm text-[#1F1F1F] cursor-pointer select-none min-h-9"
                         >
                           <input
                             type="radio"
@@ -1235,7 +1249,7 @@ export default function App() {
                       htmlFor="fecha-objetivo"
                       className="text-xs font-medium tracking-wide text-[#5C5953] whitespace-nowrap shrink-0"
                     >
-                      Implementación objetivo
+                      Fecha objetivo
                     </label>
                     <input
                       id="fecha-objetivo"
@@ -1244,14 +1258,14 @@ export default function App() {
                       onChange={(e) =>
                         setForm((prev) => ({ ...prev, fechaObjetivo: e.target.value }))
                       }
-                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1.5 px-1 text-sm font-mono text-[#141414] focus:border-[#141414] focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-[#CFCAC0] py-1 px-1 text-sm font-mono text-[#141414] focus:border-[#141414] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 {/* Área afectada y Estrategia de inventario */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-1.5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-1">
                     <label
                       htmlFor="area-afectada"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
@@ -1265,7 +1279,7 @@ export default function App() {
                         onChange={(e) =>
                           setForm((prev) => ({ ...prev, areaAfectada: e.target.value }))
                         }
-                        className="w-full appearance-none rounded-none border border-[#D8D4CC] bg-[#FAF9F6] py-2.5 pl-3.5 pr-9 text-sm text-[#141414] focus:bg-white focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                        className="w-full appearance-none rounded-none border border-[#D8D4CC] bg-[#FAF9F6] py-2 pl-3 pr-9 text-sm text-[#141414] focus:bg-white focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
                       >
                         <option value="">Seleccionar</option>
                         {AFFECTED_AREAS.map((area) => (
@@ -1281,12 +1295,12 @@ export default function App() {
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <label
                       htmlFor="estrategia-inventario"
                       className="block text-xs font-medium tracking-wide text-[#5C5953]"
                     >
-                      Disposición de inventario actual
+                      Inventario actual
                     </label>
                     <div className="relative">
                       <select
@@ -1298,9 +1312,9 @@ export default function App() {
                             estrategiaInventario: e.target.value,
                           }))
                         }
-                        className="w-full appearance-none rounded-none border border-[#D8D4CC] bg-[#FAF9F6] py-2.5 pl-3.5 pr-9 text-sm text-[#141414] focus:bg-white focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
+                        className="w-full appearance-none rounded-none border border-[#D8D4CC] bg-[#FAF9F6] py-2 pl-3 pr-9 text-sm text-[#141414] focus:bg-white focus:border-[#141414] focus:outline-none cursor-pointer transition-colors"
                       >
-                        <option value="">Seleccionar estrategia</option>
+                        <option value="">Seleccionar acción</option>
                         {INVENTORY_STRATEGIES.map((strategy) => (
                           <option key={strategy} value={strategy}>
                             {strategy}
@@ -1316,15 +1330,15 @@ export default function App() {
                 </div>
 
                 {/* Matriz de controles técnicos y regulatorios */}
-                <div className="space-y-2.5">
+                <div className="space-y-2">
                   <span className="block text-xs font-medium tracking-wide text-[#5C5953]">
-                    Validaciones técnicas y regulatorias requeridas
+                    Controles requeridos
                   </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 border border-[#EAE7E0] bg-[#FAF9F6] p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-1.5 border border-[#EAE7E0] bg-[#FAF9F6] px-4 py-3">
                     {TECHNICAL_CHECKS.map((check) => (
                       <label
                         key={check.key}
-                        className="inline-flex items-center gap-2.5 text-sm text-[#1F1F1F] cursor-pointer select-none min-h-8"
+                        className="inline-flex items-center gap-2 text-sm text-[#1F1F1F] cursor-pointer select-none min-h-8"
                       >
                         <input
                           type="checkbox"
@@ -1338,190 +1352,38 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Plan de mitigación */}
-                <div className="space-y-2">
+                {/* Plan de mitigación corto */}
+                <div className="space-y-1.5">
                   <label
                     htmlFor="plan-mitigacion"
                     className="block text-xs font-medium tracking-wide text-[#5C5953]"
                   >
-                    Plan de mitigación
+                    Acción de mitigación breve
                   </label>
-                  <textarea
+                  <input
                     id="plan-mitigacion"
-                    rows={3}
+                    type="text"
+                    list="mitigation-suggestions"
+                    maxLength={140}
                     value={form.planMitigacion}
                     onChange={(e) =>
                       setForm((prev) => ({ ...prev, planMitigacion: e.target.value }))
                     }
-                    placeholder="Pruebas de compatibilidad envase-fórmula, hermeticidad al vacío, estabilidad térmica o validación olfativa..."
-                    className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3.5 py-2.5 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none resize-y transition-colors"
+                    placeholder="Ej. Prueba de vacío en 50 muestras antes del llenado"
+                    className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3 py-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none transition-colors"
                   />
                 </div>
               </div>
             )}
           </section>
 
-          {/* Sección 4: Plan de validación y hitos */}
-          <section className="border border-[#D8D4CC] rounded-none overflow-hidden">
-            <button
-              type="button"
-              onClick={() => toggleSection('validacion')}
-              aria-expanded={openSections.validacion}
-              className="w-full flex items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-3 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
-            >
-              <div className="flex items-center gap-3">
-                <ChevronDown
-                  className={`w-4 h-4 text-[#141414] shrink-0 transition-transform duration-150 ${
-                    openSections.validacion ? 'rotate-0' : '-rotate-90'
-                  }`}
-                  aria-hidden="true"
-                />
-                <span className="font-serif text-lg font-semibold tracking-wide text-[#141414]">
-                  4. Plan de validación y pruebas piloto
-                </span>
-              </div>
-              <span className="text-xs font-mono tabular-nums text-[#5C5953] whitespace-nowrap">
-                {form.hitosValidacion.length} hitos
-              </span>
-            </button>
-
-            {openSections.validacion && (
-              <div className="p-5 sm:p-7 bg-white space-y-5">
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm min-w-[660px]">
-                    <thead>
-                      <tr className="bg-[#FAF9F6] border-y border-[#D8D4CC] text-[#5C5953]">
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[32%]">
-                          Protocolo / Prueba
-                        </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[22%]">
-                          Responsable
-                        </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[18%]">
-                          Fecha límite
-                        </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide border-l border-[#E6E3DC] w-[24%]">
-                          Criterio de aceptación
-                        </th>
-                        <th className="py-2.5 px-2 w-[4%]" aria-label="Acciones" />
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#EAE7E0]">
-                      {form.hitosValidacion.map((milestone, idx) => (
-                        <tr key={milestone.id} className="hover:bg-[#FAF9F6] transition-colors">
-                          <td className="py-2 pr-3">
-                            <input
-                              type="text"
-                              aria-label={`Protocolo o prueba ${idx + 1}`}
-                              value={milestone.prueba}
-                              onChange={(e) =>
-                                handleMilestoneChange(milestone.id, 'prueba', e.target.value)
-                              }
-                              placeholder={`Ej. Prueba piloto en línea ${idx + 1}`}
-                              className="w-full bg-transparent py-1.5 px-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
-                            />
-                          </td>
-                          <td className="py-2 px-3 border-l border-[#EAE7E0]">
-                            <input
-                              type="text"
-                              aria-label={`Responsable hito ${idx + 1}`}
-                              value={milestone.responsable}
-                              onChange={(e) =>
-                                handleMilestoneChange(
-                                  milestone.id,
-                                  'responsable',
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Laboratorio / Planta"
-                              className="w-full bg-transparent py-1.5 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
-                            />
-                          </td>
-                          <td className="py-2 px-3 border-l border-[#EAE7E0]">
-                            <input
-                              type="date"
-                              aria-label={`Fecha límite hito ${idx + 1}`}
-                              value={milestone.fechaLimite}
-                              onChange={(e) =>
-                                handleMilestoneChange(
-                                  milestone.id,
-                                  'fechaLimite',
-                                  e.target.value
-                                )
-                              }
-                              className="w-full bg-transparent py-1.5 px-1 text-sm font-mono text-[#141414] focus:outline-none"
-                            />
-                          </td>
-                          <td className="py-2 px-3 border-l border-[#EAE7E0]">
-                            <input
-                              type="text"
-                              aria-label={`Criterio de aceptación hito ${idx + 1}`}
-                              value={milestone.criterio}
-                              onChange={(e) =>
-                                handleMilestoneChange(milestone.id, 'criterio', e.target.value)
-                              }
-                              placeholder="0 fugas / ΔE < 0.5"
-                              className="w-full bg-transparent py-1.5 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:outline-none"
-                            />
-                          </td>
-                          <td className="py-2 pl-1 text-right">
-                            {form.hitosValidacion.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveMilestone(milestone.id)}
-                                aria-label={`Eliminar hito ${idx + 1}`}
-                                className="p-1 text-[#9E9B95] hover:text-[#141414] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]"
-                              >
-                                <X className="w-3.5 h-3.5" aria-hidden="true" />
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="flex items-center justify-between pt-1">
-                  <button
-                    type="button"
-                    onClick={handleAddMilestone}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium tracking-wide text-[#5C5953] hover:text-[#141414] py-1.5 px-2.5 border border-[#D8D4CC] hover:border-[#141414] transition-colors whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141414]"
-                  >
-                    <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>Agregar hito de validación</span>
-                  </button>
-                </div>
-
-                <div className="space-y-2 pt-2 border-t border-[#EAE7E0]">
-                  <label
-                    htmlFor="notas-comite"
-                    className="block text-xs font-medium tracking-wide text-[#5C5953]"
-                  >
-                    Notas adicionales para el Comité de Cambios
-                  </label>
-                  <textarea
-                    id="notas-comite"
-                    rows={2}
-                    value={form.notasComite}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, notasComite: e.target.value }))
-                    }
-                    placeholder="Dependencias de lanzamiento estacional, muestras físicas adjuntas o consideraciones logísticas..."
-                    className="w-full rounded-none border border-[#D8D4CC] bg-[#FAF9F6] px-3.5 py-2 text-sm text-[#141414] placeholder:text-[#A39F97] focus:bg-white focus:border-[#141414] focus:outline-none resize-y transition-colors"
-                  />
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* Sección 5: Aprobaciones */}
+          {/* Sección 4: Matriz de aprobaciones */}
           <section className="border border-[#D8D4CC] rounded-none overflow-hidden">
             <button
               type="button"
               onClick={() => toggleSection('aprobaciones')}
               aria-expanded={openSections.aprobaciones}
-              className="w-full flex flex-wrap items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-3 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
+              className="w-full flex flex-wrap items-center justify-between gap-3 bg-[#F5F3EE] hover:bg-[#ECE9E1] px-5 py-2.5 text-left border-b border-[#D8D4CC] transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#141414]"
             >
               <div className="flex items-center gap-3">
                 <ChevronDown
@@ -1531,7 +1393,7 @@ export default function App() {
                   aria-hidden="true"
                 />
                 <span className="font-serif text-lg font-semibold tracking-wide text-[#141414]">
-                  5. Matriz de aprobaciones
+                  4. Matriz de aprobaciones
                 </span>
               </div>
               <div className="flex items-center gap-2 text-xs font-mono tabular-nums text-[#5C5953]">
@@ -1552,27 +1414,27 @@ export default function App() {
             </button>
 
             {openSections.aprobaciones && (
-              <div className="p-5 sm:p-7 bg-white">
+              <div className="p-5 sm:p-6 bg-white">
                 <div className="overflow-x-auto">
-                  <table className="w-full border-collapse text-sm min-w-[780px]">
+                  <table className="w-full border-collapse text-sm min-w-[760px]">
                     <thead>
                       <tr className="bg-[#FAF9F6] border-y border-[#D8D4CC] text-[#5C5953]">
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[18%]">
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[18%]">
                           Rol
                         </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[20%]">
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[20%]">
                           Nombre
                         </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[12%]">
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[12%]">
                           Firma
                         </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[14%]">
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[14%]">
                           Fecha
                         </th>
-                        <th className="py-2.5 px-3 text-left text-xs font-medium tracking-wide w-[16%]">
-                          Observaciones
+                        <th className="py-2 px-3 text-left text-xs font-medium tracking-wide w-[16%]">
+                          Nota breve
                         </th>
-                        <th className="py-2.5 pl-3 text-left text-xs font-medium tracking-wide w-[20%]">
+                        <th className="py-2 pl-3 text-left text-xs font-medium tracking-wide w-[20%]">
                           Estado
                         </th>
                       </tr>
@@ -1580,24 +1442,26 @@ export default function App() {
                     <tbody className="divide-y divide-[#EAE7E0]">
                       {form.aprobaciones.map((row, idx) => (
                         <tr key={row.rol} className="hover:bg-[#FAF9F6] transition-colors">
-                          <td className="py-3 px-3 font-medium text-[#141414] whitespace-nowrap">
+                          <td className="py-2.5 px-3 font-medium text-[#141414] whitespace-nowrap">
                             {row.rol}
                           </td>
-                          <td className="py-2.5 px-3">
+                          <td className="py-2 px-3">
                             <input
                               type="text"
+                              maxLength={40}
                               aria-label={`Nombre para ${row.rol}`}
                               value={row.nombre}
                               onChange={(e) =>
                                 handleApprovalChange(idx, 'nombre', e.target.value)
                               }
-                              placeholder="Responsable"
+                              placeholder="Nombre"
                               className="w-full bg-transparent border-b border-[#D8D4CC] py-1 px-1 text-sm text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                             />
                           </td>
-                          <td className="py-2.5 px-3">
+                          <td className="py-2 px-3">
                             <input
                               type="text"
+                              maxLength={10}
                               aria-label={`Firma para ${row.rol}`}
                               value={row.firma}
                               onChange={(e) =>
@@ -1607,7 +1471,7 @@ export default function App() {
                               className="w-full bg-transparent border-b border-[#D8D4CC] py-1 px-1 text-sm font-mono text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                             />
                           </td>
-                          <td className="py-2.5 px-3">
+                          <td className="py-2 px-3">
                             <input
                               type="date"
                               aria-label={`Fecha de firma para ${row.rol}`}
@@ -1618,19 +1482,20 @@ export default function App() {
                               className="w-full bg-transparent border-b border-[#D8D4CC] py-1 px-1 text-xs font-mono text-[#141414] focus:border-[#141414] focus:outline-none transition-colors"
                             />
                           </td>
-                          <td className="py-2.5 px-3">
+                          <td className="py-2 px-3">
                             <input
                               type="text"
+                              maxLength={45}
                               aria-label={`Observaciones para ${row.rol}`}
                               value={row.observaciones}
                               onChange={(e) =>
                                 handleApprovalChange(idx, 'observaciones', e.target.value)
                               }
-                              placeholder="Condición / nota"
+                              placeholder="Opcional"
                               className="w-full bg-transparent border-b border-[#D8D4CC] py-1 px-1 text-xs text-[#141414] placeholder:text-[#A39F97] focus:border-[#141414] focus:outline-none transition-colors"
                             />
                           </td>
-                          <td className="py-2.5 pl-3">
+                          <td className="py-2 pl-3">
                             <div className="flex items-center gap-4">
                               <label className="inline-flex items-center gap-1.5 text-xs text-[#1F1F1F] cursor-pointer select-none min-h-9">
                                 <input
@@ -1664,7 +1529,7 @@ export default function App() {
 
           {/* Resumen de envío confirmado */}
           {submittedAt && (
-            <div className="border border-[#141414] bg-[#FAF9F6] p-5 space-y-2">
+            <div className="border border-[#141414] bg-[#FAF9F6] p-4 space-y-1.5">
               <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#D8D4CC] pb-2">
                 <span className="font-serif text-base font-semibold text-[#141414]">
                   Registro de envío · {form.noSolicitud}
@@ -1707,7 +1572,7 @@ export default function App() {
           )}
 
           {/* Botones finales estilo Maison Dior */}
-          <footer className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-4 pt-4 border-t border-[#D8D4CC]">
+          <footer className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-4 pt-3 border-t border-[#D8D4CC]">
             <button
               type="button"
               onClick={handleSaveDraft}
@@ -1723,6 +1588,32 @@ export default function App() {
               Enviar
             </button>
           </footer>
+          {/* Listas desplegables de sugerencias rápidas */}
+          <datalist id="part-suggestions">
+            {PART_SUGGESTIONS.map((item) => (
+              <option key={item} value={item} />
+            ))}
+          </datalist>
+          <datalist id="problem-suggestions">
+            {PROBLEM_SUGGESTIONS.map((item) => (
+              <option key={item} value={item} />
+            ))}
+          </datalist>
+          <datalist id="proposal-suggestions">
+            {PROPOSAL_SUGGESTIONS.map((item) => (
+              <option key={item} value={item} />
+            ))}
+          </datalist>
+          <datalist id="cost-concept-suggestions">
+            {COST_CONCEPT_SUGGESTIONS.map((item) => (
+              <option key={item} value={item} />
+            ))}
+          </datalist>
+          <datalist id="mitigation-suggestions">
+            {MITIGATION_SUGGESTIONS.map((item) => (
+              <option key={item} value={item} />
+            ))}
+          </datalist>
         </form>
       </main>
     </div>
